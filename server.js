@@ -13,18 +13,25 @@ app.get('/', function (req, res) {
     res.send('Todo API Root');
 });
 
-// GET /todos
+// GET /todos?completed=false&q=work
 app.get('/todos', function(req, res) {
     var queryParams = req.query;
     var filteredTodos = todos;
-    console.log(queryParams);
     
-    if(queryParams && queryParams.completed === 'true') {
+    if (queryParams && queryParams.completed === 'true') {
         filteredTodos = _.where(filteredTodos, {completed: true});
-        console.log(filteredTodos);
     } else if (queryParams && queryParams.completed === 'false') {
         filteredTodos = _.where(filteredTodos, {completed: false});
     }
+    
+    if (queryParams.hasOwnProperty('q') && queryParams.q.length > 0) {
+        var filteredTodos = _.filter(filteredTodos, function(todo) {
+            return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
+        });
+    }
+    
+    // filter all todos (it does the looping)
+    "Go to work on Saturday".indexOf('work'); // -1 if doesn't exist,  
     
     res.json(filteredTodos);
 });
