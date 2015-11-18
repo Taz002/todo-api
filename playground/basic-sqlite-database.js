@@ -24,6 +24,8 @@ sequelize.sync({
 }).then(function () {
     console.log('Everything is syncedd');
     
+    
+    
     Todo.findOne({
         where: {
             id: 3
