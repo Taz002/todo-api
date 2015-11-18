@@ -13,6 +13,10 @@ app.get('/', function (req, res) {
     res.send('Todo API Root');
 });
 
+app.get('/loaderio-86cb658d03ce546ef7d278224978a862/', function (req, res) {
+    res.send('loaderio-86cb658d03ce546ef7d278224978a862');
+});
+
 // GET /todos?completed=false&q=work
 app.get('/todos', function(req, res) {
     var queryParams = req.query;
