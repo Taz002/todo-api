@@ -35,8 +35,6 @@ app.get('/todos', function(req, res) {
         };
     }
     
-    console.log(where);
-    
     db.todo.findAll({
         where: where
     }).then(function (todos) {
