@@ -20,25 +20,34 @@ app.get('/loaderio-86cb658d03ce546ef7d278224978a862/', function (req, res) {
 
 // GET /todos?completed=false&q=work
 app.get('/todos', function(req, res) {
-    var queryParams = req.query;
-    var filteredTodos = todos;
+    var query = req.query;
+    var where = {};
     
-    if (queryParams && queryParams.completed === 'true') {
-        filteredTodos = _.where(filteredTodos, {completed: true});
-    } else if (queryParams && queryParams.completed === 'false') {
-        filteredTodos = _.where(filteredTodos, {completed: false});
+    if (query.hasOwnProperty('completed') && query.completed === 'true') {
+        where.completed = true;
+    } else if (query.hasOwnProperty('completed') && query.completed === 'false') {
+        where.completed = false;
     }
     
-    if (queryParams.hasOwnProperty('q') && queryParams.q.length > 0) {
-        var filteredTodos = _.filter(filteredTodos, function(todo) {
-            return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
-        });
+    if (query.hasOwnProperty('q') && query.q.length > 0) {
+        where.description = {
+            $like: '%' + query.q + '%'
+        };
     }
     
-    // filter all todos (it does the looping)
-    "Go to work on Saturday".indexOf('work'); // -1 if doesn't exist,  
+    console.log(where);
     
-    res.json(filteredTodos);
+    db.todo.findAll({
+        where: where
+    }).then(function (todos) {
+        if(!!todos) {
+            res.json(todos);
+        } else {
+            res.status(404).send();
+        }
+    }, function (e) {
+        res.status(500).send();
+    });
 });
 
 // GET /todos/:id
