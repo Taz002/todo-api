@@ -128,6 +128,21 @@ app.put('/todos/:id', function (req, res) {
     });
 });
 
+// POST /users
+app.post('/users', function (req, res) {
+    var body = _.pick(req.body, 'email', 'password');
+    
+    db.user.create(body).then(function (user) {
+        res.json(user.toJSON());
+    }, function (e) {
+        console.log('first error fired');
+        res.status(400).json(e);
+    }).catch(function (e) {
+        console.log('second error fired');
+        res.status(400).json(e);
+    });
+});
+
 db.sequelize.sync().then(function () {
     console.log('Everything is synced');
     app.listen(PORT, function () {
